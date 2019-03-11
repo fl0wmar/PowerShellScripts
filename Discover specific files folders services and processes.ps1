@@ -6,9 +6,9 @@
 
 #UID, Variables, and base arrays
     <#
-        In this section I housed the variables that Crocodile is using
+        In this section I housed the variables that this script is using
 
-        UID: In order to read/export results to/from the computer running Crocodile, the script needs a UID from the user who's running it, so this one line of code grabs it
+        UID: In order to read/export results to/from the computer running this, the script needs a UID from the user who's running it, so this one line of code grabs it
         Machines: The script works based off a TXT file on your desktop titled "MachineList" (You can change this if you want)
         Results: We're gonna be using an array to store all of our results in, so to use an array we have to declare it as a variable
         Services to check: We're checking multiple services, so we're using an array
@@ -18,7 +18,7 @@
     #>
 $Date = Get-Date -Format "MM-dd-yyyy"
 $UID = ($(Get-WmiObject -Class win32_computersystem | Select-Object username).username).split("\")[1]
-$machines = Get-Content C:\Users\$UID\Desktop\ServersProductCheck.txt
+$machines = Get-Content C:\Users\$UID\Desktop\EXAMPLE.txt
 $ExportFile = "C:\Users\$UID\Desktop\EXAMPLE.csv"
 $results = @()
 $ServicesToCheck = @()
@@ -26,25 +26,18 @@ $ProcessesToCheck = @()
 $columns = @()
 $filesToCheck = @()
 
-Write-Host "Crocodile will look for Product Files, Folders, Processes, and Services"
 
-#FUNCTIONS
-    <#
-        For the love of God, please don't touch this function.
-
-        It works, and grabs the address of a machine. That's it.
-    #>
-    function Get-HostToIP($machine) 
-        {
-            Write-host "Looking for $machine..."
-            Try {
-                $result = [system.Net.Dns]::GetHostByName($machine)
-                $result.AddressList | ForEach-Object {$_.IPAddressToString } 
-            } catch {
-                "OFFLINE"
-                Write-Host "$Machine is OFFLINE"
-            }
+function Get-HostToIP($machine) 
+    {
+        Write-host "Looking for $machine..."
+        Try {
+            $result = [system.Net.Dns]::GetHostByName($machine)
+            $result.AddressList | ForEach-Object {$_.IPAddressToString } 
+        } catch {
+            "OFFLINE"
+            Write-Host "$Machine is OFFLINE"
         }
+    }
 
 #Services Array
     <#
@@ -56,13 +49,13 @@ Write-Host "Crocodile will look for Product Files, Folders, Processes, and Servi
         <#
             We're specifying all the processes we're checking as an array, so to do that we declare the array variable and append a new ps object and declare the properties of it    
         #>
-    $ProcessesToCheck += New-Object psobject -Property @{Name="mfecanary"}
+    $ProcessesToCheck += New-Object psobject -Property @{Name="EXAMPLE"}
 
 #Files and Folders
     <#
         We're specifying all the files/folders we're checking as an array, so to do that we declare the array variable and append a new ps object and declare the path of it    
     #>
-    $filesToCheck += new-object psobject -Property @{Name="Program Files";Path="\Program Files\Product"}
+    $filesToCheck += new-object psobject -Property @{Name="EXAMPLE";Path="\Program Files\Product\EXAMPLE"}
 
 #COLUMNS
     <#
